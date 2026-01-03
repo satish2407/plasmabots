@@ -4,9 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@Autonomous(name = "DecryptersSoloRun (Blocks to Java)")
-public class DecryptersSoloRun extends LinearOpMode {
+@Autonomous(name = "DecryptersSoloRun2 (Blocks to Java)")
+public class DecryptersSoloRun2 extends LinearOpMode {
 
   private DcMotor left_drive;
   private DcMotor right_drive;
@@ -37,19 +38,24 @@ public class DecryptersSoloRun extends LinearOpMode {
       left_drive.setPower(0);
       right_drive.setPower(0);
       sleep(500);
-      launcher.setPower(0.65);
-      sleep(1500);
+      launcher.setPower(0.63);
+      sleep(2000);
       for (int count = 0; count < 3; count++) {
         rightfeeder.setPower(-1);
         leftfeeder.setPower(1);
         sleep(500);
         leftfeeder.setPower(0);
         rightfeeder.setPower(0);
-        sleep(250);
-        telemetry.addData("Power", launcher.getPower());
+        sleep(2500);
+        telemetry.addData("launch max speed", ((DcMotorEx) launcher).getVelocity());
         telemetry.update();
       }
       sleep(500);
+      left_drive.setPower(0.5);
+      right_drive.setPower(-0.5);
+      sleep(2000);
+      left_drive.setPower(0);
+      right_drive.setPower(0);
     }
   }
 }
