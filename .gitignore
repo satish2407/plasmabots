@@ -1,0 +1,6 @@
+tmp/
+.idea
+*.iml
+logs/
+.bak
+.vscode/
