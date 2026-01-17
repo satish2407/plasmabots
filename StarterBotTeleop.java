@@ -73,8 +73,8 @@ public class StarterBotTeleop extends OpMode {
      * velocity. Here we are setting the target, and minimum velocity that the launcher should run
      * at. The minimum velocity is a threshold for determining when to fire.
      */
-    final double LAUNCHER_TARGET_VELOCITY = 70;
-    final double LAUNCHER_MIN_VELOCITY = 40;
+    final double LAUNCHER_TARGET_VELOCITY = 1400;
+    final double LAUNCHER_MIN_VELOCITY = 1361;
 
     // Declare OpMode members.
     private DcMotor leftDrive = null;
@@ -213,6 +213,9 @@ public class StarterBotTeleop extends OpMode {
          * both motors work to rotate the robot. Combinations of these inputs can be used to create
          * more complex maneuvers.
          */
+         
+         //telemetry.addData("Before Arcade", launcher.getVelocity());
+        //telemetry.update();
         arcadeDrive(-gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         /*
@@ -221,17 +224,16 @@ public class StarterBotTeleop extends OpMode {
          */
         if (gamepad1.y) {
              feedersOn = !feedersOn;
-            leftFeeder.setPower(FEEDER_POWER);
-            rightFeeder.setPower(FEEDER_POWER);
+            //leftFeeder.setPower(FEEDER_POWER);
+            //rightFeeder.setPower(FEEDER_POWER);
             launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
-             if (feedersOn) {
+             /*if (feedersOn) {
             leftFeeder.setPower(FEEDER_POWER);
             rightFeeder.setPower(FEEDER_POWER);
         } else {
             leftFeeder.setPower(STOP_SPEED);
             rightFeeder.setPower(STOP_SPEED);
-        }
-            ;
+        }*/
         } else if (gamepad1.a) { // stop flywheel
             launcher.setVelocity(STOP_SPEED);
         }
@@ -247,7 +249,8 @@ public class StarterBotTeleop extends OpMode {
         boolean bPressed = gamepad1.b;
 
         if (bPressed && !prevB) {
-            feedersOn = !feedersOn;     // flip feeders state
+           // if (launcher.getVelocity()>LAUNCHER_MIN_VELOCITY)
+                feedersOn = !feedersOn;     // flip feeders state
         }
 
         prevB = bPressed;
@@ -265,10 +268,11 @@ public class StarterBotTeleop extends OpMode {
         /*
          * Show the state and motor powers
          */
-        telemetry.addData("State", launchState);
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        telemetry.addData("motorSpeed", launcher.getVelocity());
-
+         telemetry.addData("State", launchState);
+         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+         telemetry.addData("motorSpeed", launcher.getVelocity());
+         telemetry.update();
+        
     }
 
     /*
@@ -308,12 +312,16 @@ public class StarterBotTeleop extends OpMode {
                 rightFeeder.setPower(FULL_SPEED);
                 feederTimer.reset();
                 launchState = LaunchState.LAUNCHING;
+                telemetry.addData("launchVelocity", launcher.getVelocity());
+                telemetry.update();
                 break;
             case LAUNCHING:
                 if (feederTimer.seconds() > FEED_TIME_SECONDS) {
                     launchState = LaunchState.IDLE;
                     leftFeeder.setPower(STOP_SPEED);
                     rightFeeder.setPower(STOP_SPEED);
+                     telemetry.addData("LaunchVelocity", launcher.getVelocity());
+            telemetry.update();
                 }
                 break;
         }
