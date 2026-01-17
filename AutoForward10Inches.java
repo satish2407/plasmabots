@@ -1,58 +1,63 @@
-package org.firstinspires.ftc.teamcode;
+ackage org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@Autonomous(name="Auto Forward 10 Inches", group="Autonomous")
-public class AutoForward10Inches extends LinearOpMode {
+@Autonomous(name = "DecryptersSoloRun2 (Blocks to Java)")
+public class DecryptersSoloRun2 extends LinearOpMode {
 
-    // Declare OpMode members for configured hardware
-    private DcMotor left_drive = null;
-    private DcMotor right_drive = null;
+  private DcMotor left_drive;
+  private DcMotor right_drive;
+  private DcMotor launcher;
+  private CRServo rightfeeder;
+  private CRServo leftfeeder;
 
-    // Drive speed constant
-    static final double DRIVE_SPEED = 0.4;
+  /**
+   * This sample contains the bare minimum Blocks for any regular OpMode. The 3 blue
+   * Comment Blocks show where to place Initialization code (runs once, after touching the
+   * DS INIT button, and before touching the DS Start arrow), Run code (runs once, after
+   * touching Start), and Loop code (runs repeatedly while the OpMode is active, namely not
+   * Stopped).
+   */
+  @Override
+  public void runOpMode() {
+    left_drive = hardwareMap.get(DcMotor.class, "left_drive");
+    right_drive = hardwareMap.get(DcMotor.class, "right_drive");
+    launcher = hardwareMap.get(DcMotor.class, "launcher");
+    rightfeeder = hardwareMap.get(CRServo.class, "rightfeeder");
+    leftfeeder = hardwareMap.get(CRServo.class, "leftfeeder");
 
-    @Override
-    public void runOpMode() {
-        // Initialize the hardware variables
-        left_drive = hardwareMap.get(DcMotor.class, "left_drive");
-        right_drive = hardwareMap.get(DcMotor.class, "right_drive");
-
-        // Set motor directions
-        left_drive.setDirection(DcMotor.Direction.FORWARD);
-        right_drive.setDirection(DcMotor.Direction.REVERSE);
-
-        // Set motors to run without encoders for time-based driving
-        left_drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right_drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Wait for the game to start (driver presses PLAY)
-        telemetry.addData("Status", "Initialized");
-        telemetry.addData("Action", "Ready to drive forward 10 inches");
+    waitForStart();
+    if (opModeIsActive()) {
+      left_drive.setPower(0.5);
+      right_drive.setPower(-0.5);
+      sleep(1450);
+      left_drive.setPower(0);
+      right_drive.setPower(0);
+      sleep(500);
+      launcher.setPower(0.63);
+      sleep(4000);
+      telemetry.addData("Launcher speed", ((DcMotorEx) launcher).getVelocity());
+      telemetry.update();
+      for (int count = 0; count < 3; count++) {
+        rightfeeder.setPower(-1);
+        leftfeeder.setPower(1);
+        sleep(500);
+        leftfeeder.setPower(0);
+        rightfeeder.setPower(0);
+        telemetry.addData("Launcher speed", ((DcMotorEx) launcher).getVelocity());
         telemetry.update();
-
-        waitForStart();
-
-        // Run autonomous sequence
-        if (opModeIsActive()) {
-            // Drive forward for 2 seconds
-            left_drive.setPower(DRIVE_SPEED);
-            right_drive.setPower(DRIVE_SPEED);
-
-            sleep(2000);  // Drive for 2 seconds
-
-            // Stop motors
-            left_drive.setPower(0);
-            right_drive.setPower(0);
-
-            // Display completion message
-            telemetry.addData("Status", "Complete");
-            telemetry.addData("Path", "Drove forward for 2 seconds");
-            telemetry.update();
-            sleep(1000);
-        }
+        sleep(2000);
+      }
+      sleep(500);
+      left_drive.setPower(0.5);
+      right_drive.setPower(-0.5);
+      sleep(2000);
+      left_drive.setPower(0);
+      right_drive.setPower(0);
     }
+  }
 }
